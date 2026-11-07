@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#073b32">
+<title>İlim Yolu | İslami Bilgi Oyunu</title>
+<style>
+:root{--bg:#061f1b;--panel:#0d3b32;--panel2:#124b3e;--gold:#f4c95d;--cream:#fff8e7;--muted:#c8d9d0;--line:#286353}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#145344 0,#061f1b 55%);color:var(--cream);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{padding:22px 6%;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #ffffff18}
+.logo{font-size:1.35rem;font-weight:850;color:var(--gold);letter-spacing:.4px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{color:var(--cream);text-decoration:none;padding:9px 13px;border-radius:20px;font-size:.95rem}
+nav a:hover{background:#ffffff18}
+.hero{padding:70px 6% 55px;text-align:center;max-width:950px;margin:auto}
+.badge{display:inline-block;border:1px solid #d6b95c88;color:var(--gold);padding:7px 13px;border-radius:30px;font-size:.85rem}
+h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:1.05;margin:20px 0 14px}
+.hero p{color:var(--muted);font-size:1.1rem;max-width:650px;margin:0 auto 25px}
+.btn{border:0;border-radius:12px;padding:13px 19px;background:var(--gold);color:#18251e;font-weight:800;cursor:pointer;font-size:1rem;text-decoration:none;display:inline-block}
+.btn.secondary{background:#ffffff12;color:var(--cream);border:1px solid var(--line)}
+main{width:min(1100px,90%);margin:0 auto}
+section{padding:35px 0;scroll-margin-top:20px}
+.section-title{font-size:1.8rem;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);padding:22px;border-radius:19px;box-shadow:0 12px 35px #0002}
+.card h3{margin:5px 0 8px;color:var(--gold)}
+.card p{color:var(--muted);line-height:1.55}
+.icon{font-size:2rem}
+.quizbox{max-width:720px;margin:auto}
+.topline{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.92rem}
+.progress{height:8px;background:#ffffff20;border-radius:10px;overflow:hidden;margin:12px 0 20px}
+.bar{height:100%;width:0;background:var(--gold);transition:width .25s}
+#question{font-size:1.35rem;line-height:1.4}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.answer{padding:14px;border:1px solid var(--line);border-radius:12px;background:#ffffff0b;color:var(--cream);font-size:1rem;text-align:left;cursor:pointer}
+.answer:hover:not(:disabled){border-color:var(--gold);background:#f4c95d16}
+.answer:disabled{cursor:default;opacity:.9}
+.answer.correct{background:#1c704b;border-color:#55d69a}
+.answer.wrong{background:#7c3434;border-color:#f08c8c}
+#feedback{min-height:28px;color:var(--gold);font-weight:700}
+.quiz-actions{display:flex;gap:10px;flex-wrap:wrap}
+.sponsor-note{font-size:.85rem;color:#d6cda9}
+.sponsor{min-height:150px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.sponsor .brand{font-size:1.45rem;font-weight:900;letter-spacing:1px;color:var(--gold)}
+footer{margin-top:40px;padding:30px 6%;text-align:center;color:var(--muted);border-top:1px solid #ffffff18}
+@media(max-width:560px){header{align-items:flex-start;flex-direction:column}.answers{grid-template-columns:1fr}.hero{padding-top:48px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">☾ İLİM YOLU</div>
+  <nav>
+    <a href="#oyun">Bilgi Oyunu</a><a href="#gelisim">Gelişim</a><a href="#ogren">Öğren</a><a href="#esma">☪ Esmaül Hüsna</a><a href="#halifeler">🕌 4 Büyük Halife</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <span class="badge">🕌 Eğlenerek öğren</span>
+  <h1>Bilgini keşfet,<br><span style="color:var(--gold)">iyiliğe yol al.</span></h1>
+  <p>İslam hakkında temel bilgileri eğlenceli sorularla öğren. Her doğru cevapta puan kazan, yeni bilgiler keşfet.</p>
+  <a class="btn" href="#oyun">Oyuna Başla →</a>
+  <a class="btn secondary" href="#ogren">Keşfet</a>
+</div>
+
+<main>
+<section id="oyun">
+  <div class="quizbox card">
+    <div class="topline"><span id="counter">Soru 1 / 10</span><span>⭐ Puan: <b id="score">0</b></span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <h2 id="question">Hazır mısın?</h2>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" aria-live="polite">Bir cevap seçerek başla.</div>
+    <div class="quiz-actions">
+      <button class="btn" id="next" disabled>Sonraki soru →</button>
+      <button class="btn secondary" id="restart">Yeniden başlat</button>
+    </div>
+  </div>
+</section>
+
+
+<section id="gelisim">
+  <div class="card">
+    <div class="topline"><span>🚀 Oyuncu gelişimi</span><span id="levelLabel">Seviye 1</span></div>
+    <h2 class="section-title">XP ve rozetlerin</h2>
+    <p class="lead">Doğru cevaplarla XP kazan, seviyeni yükselt ve rozetleri aç.</p>
+    <div class="progress"><div class="bar" id="xpBar"></div></div>
+    <p><strong id="xpText">0 / 100 XP</strong> · <span id="badgeText">🌱 Yeni başlayan</span></p>
+    <p class="sponsor-note">Gelişimin bu cihazda saklanır. Tarayıcı verilerini silersen sıfırlanabilir.</p>
+  </div>
+</section>
+
+<section id="ogren">
+  <h2 class="section-title">Keşif alanı</h2>
+  <p class="lead">Oyunun yanında yeni konulara göz at.</p>
+  <div class="grid">
+    <article class="card"><div class="icon">📖</div><h3>Kur’an-ı Kerim</h3><p>Sureler, ayetler ve Kur’an hakkında temel bilgiler öğren.</p></article>
+    <article class="card"><div class="icon">🕋</div><h3>İslam’ın şartları</h3><p>İslam’ın beş şartını ve anlamlarını keşfet.</p></article>
+    <article class="card"><div class="icon">🌙</div><h3>Güzel ahlak</h3><p>Doğruluk, yardımlaşma, sabır ve saygı üzerine düşün.</p></article>
+    <article class="card"><div class="icon">🧭</div><h3>Peygamberler</h3><p>Peygamberler hakkında yaşına uygun, temel bilgiler edin.</p></article>
+  </div>
+</section>
+
+<section id="gunun-gorevi">
+  <div class="card">
+    <div class="icon">✨</div>
+    <h2 class="section-title">Günün güzel görevi</h2>
+    <p id="task" class="lead">Bugün birine içtenlikle teşekkür et.</p>
+    <button class="btn secondary" id="newTask">Başka görev göster</button>
+  </div>
+</section>
+
+</main>
+
+<footer>☾ İlim Yolu — Öğren, keşfet, iyiliği çoğalt. <br><small>Bu site eğitim ve eğlence amaçlı örnek bir projedir.</small></footer> <section id="halifeler" class="card">
+
+<h2>🕌 Dört Büyük Halife</h2>
+<p>Hz. Muhammed'den sonra Müslümanların ilk dört halifesi.</p>
+
+<div class="card">
+<h3>1. Hz. Ebû Bekir (r.a.)</h3>
+<p>Halifelik dönemi: 632–634</p>
+<p>İlk halifedir. Doğruluğu ve sadakatiyle tanınır.</p>
+</div>
+
+<div class="card">
+<h3>2. Hz. Ömer (r.a.)</h3>
+<p>Halifelik dönemi: 634–644</p>
+<p>Adaletiyle tanınır. İslam devletinin yönetiminde önemli çalışmalar yapmıştır.</p>
+</div>
+
+<div class="card">
+<h3>3. Hz. Osman (r.a.)</h3>
+<p>Halifelik dönemi: 644–656</p>
+<p>Hayâsı ve cömertliğiyle tanınır. Kur'an nüshalarının çoğaltılmasını sağlamıştır.</p>
+</div>
+
+<div class="card">
+<h3>4. Hz. Ali (r.a.)</h3>
+<p>Halifelik dönemi: 656–661</p>
+<p>İlmi, cesareti ve bilgeliğiyle tanınır.</p>
+</div>
+
+</section>
+
+<script>
+const questions=[
+ {q:"İslam’ın kaç şartı vardır?",a:["3","4","5","6"],c:2,e:"İslam’ın beş şartı vardır."},
+ {q:"Kur’an-ı Kerim kaç sureden oluşur?",a:["100","110","114","120"],c:2,e:"Kur’an-ı Kerim 114 sureden oluşur."},
+ {q:"İlk peygamber kimdir?",a:["Hz. Musa","Hz. Âdem","Hz. İbrahim","Hz. Nuh"],c:1,e:"İslam inancına göre ilk peygamber Hz. Âdem’dir."},
+ {q:"Müslümanların kutsal kitabı hangisidir?",a:["Tevrat","İncil","Zebur","Kur’an-ı Kerim"],c:3,e:"Müslümanların kutsal kitabı Kur’an-ı Kerim’dir."},
+ {q:"Günde kaç vakit namaz vardır?",a:["3","4","5","6"],c:2,e:"Farz namazlar günde beş vakittir."},
+ {q:"Ramazan ayında hangi ibadet yerine getirilir?",a:["Oruç","Hac","Kurban","Zekât sadece"],c:0,e:"Ramazan ayında oruç tutulur."},
+ {q:"Kâbe hangi şehirdedir?",a:["Medine","Kudüs","Mekke","Taif"],c:2,e:"Kâbe, Mekke’dedir."},
+ {q:"Namazdan önce alınan temizliğe ne denir?",a:["Abdest","Tavaf","İhram","İtikâf"],c:0,e:"Namaz öncesi gerekli temizliklerden biri abdesttir."},
+ {q:"İslam’ın şartlarından biri hangisidir?",a:["Günde üç kez yemek","Zekât vermek","Her gün yolculuk","Sessiz kalmak"],c:1,e:"Zekât, İslam’ın beş şartından biridir."},
+ {q:"Müslümanların selamlaşırken kullandığı yaygın selam nedir?",a:["Günaydın","Hoşça kal","Selâmün aleyküm","İyi geceler"],c:2,e:"Yaygın selamlaşma ifadesi “Selâmün aleyküm”dür."}
+];
+let index=0,score=0,answered=false;
+let totalXP = Number(localStorage.getItem("ilimYoluXP") || 0);
+const $=id=>document.getElementById(id);
+
+function updateProgress(){
+ const level = Math.floor(totalXP / 100) + 1;
+ const inLevel = totalXP % 100;
+ $("levelLabel").textContent = "Seviye " + level;
+ $("xpText").textContent = inLevel + " / 100 XP · Toplam " + totalXP + " XP";
+ $("xpBar").style.width = inLevel + "%";
+ let badge = "🌱 Yeni başlayan";
+ if(totalXP >= 500) badge = "🏅 Bilgi ustası";
+ else if(totalXP >= 300) badge = "🌟 Meraklı araştırmacı";
+ else if(totalXP >= 100) badge = "📘 Öğrenme yolcusu";
+ $("badgeText").textContent = badge;
+ localStorage.setItem("ilimYoluXP", String(totalXP));
+}
+function render(){
+ answered=false;
+ $("counter").textContent=`Soru ${index+1} / ${questions.length}`;
+ $("score").textContent=score;
+ $("bar").style.width=`${index/questions.length*100}%`;
+ $("question").textContent=questions[index].q;
+ $("feedback").textContent="Bir cevap seç.";
+ $("next").disabled=true;
+ $("answers").innerHTML="";
+ questions[index].a.forEach((answer,i)=>{
+  const b=document.createElement("button");b.className="answer";b.textContent=answer;
+  b.addEventListener("click",()=>choose(i));$("answers").appendChild(b);
+ });
+}
+function choose(i){
+ if(answered)return;answered=true;
+ const q=questions[index];const buttons=[...$("answers").children];
+ buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add("correct");if(n===i&&i!==q.c)b.classList.add("wrong");});
+ if(i===q.c){score+=10;totalXP+=10;updateProgress();$("feedback").textContent="Doğru cevap! +10 puan ve +10 XP ⭐";}
+ else $("feedback").textContent="Bu kez olmadı. "+q.e;
+ $("score").textContent=score;$("next").disabled=false;
+ $("bar").style.width=`${(index+1)/questions.length*100}%`;
+}
+$("next").addEventListener("click",()=>{
+ if(!answered)return;
+ index++;
+ if(index>=questions.length){
+  $("question").textContent=`Tebrikler! ${score} / ${questions.length*10} puan kazandın.`;
+  $("answers").innerHTML="";$("feedback").textContent="Bilgi yolculuğuna devam etmek için yeniden başlat.";
+  $("counter").textContent="Oyun tamamlandı";$("bar").style.width="100%";$("next").disabled=true;
+ }else render();
+});
+$("restart").addEventListener("click",()=>{index=0;score=0;render();});
+const tasks=["Bugün birine içtenlikle teşekkür et.","Bir yakınına yardım et.","Güzel ve doğru bir söz söyle.","Bir arkadaşını dikkatle dinle.","Paylaşabileceğin küçük bir iyilik yap."];
+$("newTask").addEventListener("click",()=>{$("task").textContent=tasks[Math.floor(Math.random()*tasks.length)];});
+updateProgress();
+render();
+</script>
+  <section id="esma" class="card">
+
+<h2>☪ Esmaül Hüsna</h2>
+<p>Allah'ın 99 güzel ismini anlamlarıyla keşfet.</p>
+
+<input
+id="esmaAra"
+type="text"
+placeholder="🔍 İsim ara..."
+oninput="esmaAra()"
+style="width:100%;padding:13px;border-radius:12px;"
+>
+
+<div id="esmaListesi"></div>
+
+</section>
+
+<style>
+.esma-kart {
+    background:#10503e;
+    border:1px solid #d6b95c;
+    padding:17px;
+    margin:12px 0;
+    border-radius:15px;
+}
+
+.esma-kart h3 {
+    color:#f4ca62;
+}
+
+.esma-kart p {
+    color:white;
+    line-height:1.5;
+}
+</style>
+
+<script>
+
+const isimler = [
+
+["Er-Rahmân","Merhameti bütün yaratılmışları kuşatan."],
+["Er-Rahîm","Çok merhamet eden."],
+["El-Melik","Mülkün gerçek sahibi."],
+["El-Kuddûs","Her türlü eksiklikten uzak olan."],
+["Es-Selâm","Esenlik ve güven veren."],
+["El-Mü'min","Güven veren."],
+["El-Müheymin","Her şeyi gözetip koruyan."],
+["El-Azîz","Mutlak güç ve üstünlük sahibi."],
+["El-Cebbâr","Kudreti her şeye yeten."],
+["El-Mütekebbir","Büyüklükte eşi olmayan."],
+["El-Hâlık","Her şeyi yaratan."],
+["El-Bâri","Varlıkları kusursuzca yaratan."],
+["El-Musavvir","Varlıklara şekil veren."],
+["El-Gaffâr","Günahları çokça bağışlayan."],
+["El-Kahhâr","Her şeye galip gelen."],
+["El-Vehhâb","Karşılıksız nimetler veren."],
+["Er-Rezzâk","Bütün canlıların rızkını veren."],
+["El-Fettâh","Hayır kapılarını açan."],
+["El-Alîm","Her şeyi bilen."],
+["El-Kâbıd","Dilediğinin rızkını daraltan."],
+["El-Bâsıt","Rızkı genişleten."],
+["El-Hâfıd","Dilediğini alçaltan."],
+["Er-Râfi","Dilediğini yükselten."],
+["El-Muizz","İzzet ve şeref veren."],
+["El-Müzill","Dilediğini zelil kılan."],
+["Es-Semî","Her şeyi işiten."],
+["El-Basîr","Her şeyi gören."],
+["El-Hakem","En doğru hükmü veren."],
+["El-Adl","Mutlak adalet sahibi."],
+["El-Latîf","Lütuf ve ihsan sahibi."],
+["El-Habîr","Her şeyden haberdar olan."],
+["El-Halîm","Çok yumuşak davranan."],
+["El-Azîm","Sonsuz büyüklük sahibi."],
+["El-Gafûr","Çok bağışlayan."],
+["Eş-Şekûr","Az iyiliğe çok karşılık veren."],
+["El-Aliyy","En yüce olan."],
+["El-Kebîr","Büyüklükte eşi olmayan."],
+["El-Hafîz","Her şeyi koruyan."],
+["El-Mukît","Her canlıya rızkını ulaştıran."],
+["El-Hasîb","Hesap gören ve kullarına yeten."],
+["El-Celîl","Azamet ve ululuk sahibi."],
+["El-Kerîm","Cömertliği bol olan."],
+["Er-Rakîb","Her şeyi gözetleyen."],
+["El-Mucîb","Dualara cevap veren."],
+["El-Vâsi","Rahmeti ve ilmi geniş olan."],
+["El-Hakîm","Her işi hikmetli olan."],
+["El-Vedûd","Kullarını seven."],
+["El-Mecîd","Şanı yüce olan."],
+["El-Bâis","Ölüleri diriltip kaldıran."],
+["Eş-Şehîd","Her şeye şahit olan."],
+["El-Hakk","Varlığı gerçek ve değişmez olan."],
+["El-Vekîl","Kendisine güvenilip dayanılan."],
+["El-Kaviyy","Sonsuz güç sahibi."],
+["El-Metîn","Kuvveti ve kudreti sağlam olan."],
+["El-Veliyy","Dost ve yardımcı olan."],
+["El-Hamîd","Her türlü övgüye layık olan."],
+["El-Muhsî","Her şeyin sayısını bilen."],
+["El-Mübdi","Yaratmayı ilk başlatan."],
+["El-Muîd","Yaratmayı yeniden gerçekleştiren."],
+["El-Muhyî","Hayat veren."],
+["El-Mümît","Ölümü yaratan."],
+["El-Hayy","Daima diri olan."],
+["El-Kayyûm","Her şeyi ayakta tutan."],
+["El-Vâcid","Hiçbir şeye muhtaç olmayan."],
+["El-Mâcid","Şanı ve keremi büyük olan."],
+["El-Vâhid","Tek ve bir olan."],
+["Es-Samed","Hiçbir şeye muhtaç olmayan."],
+["El-Kâdir","Her şeye gücü yeten."],
+["El-Muktedir","Kudreti sonsuz olan."],
+["El-Mukaddim","Dilediğini öne alan."],
+["El-Muahhir","Dilediğini geriye bırakan."],
+["El-Evvel","Başlangıcı olmayan."],
+["El-Âhir","Sonu olmayan."],
+["Ez-Zâhir","Varlığı açık olan."],
+["El-Bâtın","Mahiyeti kavranamayan."],
+["El-Vâlî","Kâinatı yöneten."],
+["El-Müteâlî","Her şeyden yüce olan."],
+["El-Berr","İyiliği ve ihsanı bol olan."],
+["Et-Tevvâb","Tövbeleri kabul eden."],
+["El-Müntakim","Adaletiyle karşılık veren."],
+["El-Afüvv","Günahları affeden."],
+["Er-Raûf","Çok şefkatli olan."],
+["Mâlikü'l-Mülk","Bütün mülkün sahibi."],
+["Zül-Celâli ve'l-İkrâm","Azamet ve ikram sahibi."],
+["El-Muksit","Adaletle hükmeden."],
+["El-Câmi","İstediğini bir araya getiren."],
+["El-Ganiyy","Hiçbir şeye muhtaç olmayan."],
+["El-Mugnî","Dilediğini zengin eden."],
+["El-Mâni","Dilediğine engel olan."],
+["Ed-Dârr","Hikmetiyle zarar ve sıkıntıyı yaratan."],
+["En-Nâfi","Fayda veren."],
+["En-Nûr","Nurlandıran ve aydınlatan."],
+["El-Hâdî","Doğru yola ileten."],
+["El-Bedî","Eşi ve örneği olmadan yaratan."],
+["El-Bâkî","Varlığının sonu olmayan."],
+["El-Vâris","Her şeyin gerçek sahibi."],
+["Er-Reşîd","Doğru yolu gösteren."],
+["Es-Sabûr","Çok sabırlı olan."]
+
+];
+
+function esmaGoster(aranan = "") {
+
+const alan = document.getElementById("esmaListesi");
+
+alan.innerHTML = "";
+
+isimler.forEach((bilgi,index) => {
+
+if (
+!bilgi[0].toLowerCase().includes(aranan.toLowerCase()) &&
+!bilgi[1].toLowerCase().includes(aranan.toLowerCase())
+) return;
+
+alan.innerHTML += `
+
+<div class="esma-kart">
+
+<h3>${index+1}. ${bilgi[0]}</h3>
+
+<p>${bilgi[1]}</p>
+
+</div>
+
+`;
+
+});
+
+}
+
+function esmaAra() {
+
+const aranan = document.getElementById("esmaAra").value;
+
+esmaGoster(aranan);
+
+}
+
+esmaGoster();
+
+</script>
+  <!-- ☪ İLİM YOLU 4.0 – YENİ ÖZELLİKLER -->
+<style>
+.yeni-kart {
+    background:#10503e;
+    border:1px solid #d6b95c;
+    border-radius:18px;
+    padding:22px;
+    margin:18px 0;
+    color:white;
+}
+.yeni-kart h2 {color:#f4ca62}
+.zikir-sayi {
+    font-size:55px;
+    color:gold;
+    text-align:center;
+    margin:20px;
+}
+.zikir-btn {
+    display:block;
+    width:100%;
+    padding:20px;
+    font-size:20px;
+    margin:10px 0;
+}
+</style>
+
+<script>
+const yeniBolum = document.createElement("section");
+yeniBolum.id = "yenilikler";
+
+yeniBolum.innerHTML = `
+
+<div class="yeni-kart">
+<h2>📿 Zikirmatik</h2>
+<p>Çektiğin zikirleri say.</p>
+
+<div class="zikir-sayi" id="zikirSayi">0</div>
+
+<button class="zikir-btn" onclick="zikirArtir()">
+📿 Zikir Çek
+</button>
+
+<button onclick="zikirSifirla()">
+Sıfırla
+</button>
+</div>
+
+<div class="yeni-kart">
+<h2>🤲 Dua Defteri</h2>
+<p>Dualarını kişisel defterine kaydet.</p>
+
+<textarea id="duaMetni"
+placeholder="Duanı buraya yaz..."
+style="width:100%;height:100px;padding:12px;">
+</textarea>
+
+<button onclick="duaKaydet()">💾 Duamı Kaydet</button>
+<p id="duaDurum"></p>
+</div>
+
+<div class="yeni-kart">
+<h2>🌙 Günün İyilik Hedefi</h2>
+<p id="iyilikMetni">Bugün birine yardım et.</p>
+
+<button onclick="iyilikDegistir()">
+Yeni hedef göster
+</button>
+</div>
+
+<div class="yeni-kart">
+<h2>🏆 Başarılarım</h2>
+<p>📿 Zikir sayısı: <span id="toplamZikir">0</span></p>
+<p>⭐ Toplam XP: <span id="toplamXP">0</span></p>
+<p>☪ İlim Yolu yolculuğuna devam et!</p>
+</div>
+
+`;
+
+document.querySelector("main").appendChild(yeniBolum);
+
+const menu = document.querySelector("nav");
+
+if(menu){
+const link = document.createElement("a");
+link.href = "#yenilikler";
+link.textContent = "📿 Yeni Özellikler";
+menu.appendChild(link);
+}
+
+let zikir = Number(localStorage.getItem("iy_zikir") || 0);
+
+function zikirGuncelle(){
+document.getElementById("zikirSayi").textContent=zikir;
+document.getElementById("toplamZikir").textContent=zikir;
+localStorage.setItem("iy_zikir",zikir);
+}
+
+function zikirArtir(){
+zikir++;
+zikirGuncelle();
+}
+
+function zikirSifirla(){
+zikir=0;
+zikirGuncelle();
+}
+
+function duaKaydet(){
+let dua=document.getElementById("duaMetni").value;
+localStorage.setItem("iy_dua",dua);
+document.getElementById("duaDurum").textContent=
+"✅ Duan cihazına kaydedildi.";
+}
+
+document.getElementById("duaMetni").value=
+localStorage.getItem("iy_dua") || "";
+
+const iyilikler=[
+"Bir yakınına yardım et. 🤝",
+"Birine teşekkür et. ❤️",
+"Bir arkadaşını dinle. 👂",
+"Bir canlıya merhamet göster. 🐈",
+"İhtiyaç sahibi birine destek ol. 🌙",
+"Anne ve babana güzel bir söz söyle. ❤️",
+"Bugün yeni bir dini bilgi öğren. 📚"
+];
+
+function iyilikDegistir(){
+let rastgele=Math.floor(Math.random()*iyilikler.length);
+document.getElementById("iyilikMetni").textContent=
+iyilikler[rastgele];
+}
+
+document.getElementById("toplamXP").textContent=
+localStorage.getItem("iy_xp") ||
+localStorage.getItem("xp") || 0;
+
+zikirGuncelle();
+iyilikDegistir();
+</script>
+ <section class="card" id="rozet-avi">
+  <h2>🏆 Rozet Avı</h2>
+  <p>İlim yolunda rozetlerini topla!</p>
+
+  <div class="card">
+    <h3>🌙 İlk Adım</h3>
+    <p>İlk görevini tamamla.</p>
+    <span>🔒 Henüz kazanılmadı</span>
+  </div>
+
+  <div class="card">
+    <h3>📖 Bilgi Avcısı</h3>
+    <p>5 soruyu doğru cevapla.</p>
+    <span>🔒 Henüz kazanılmadı</span>
+  </div>
+
+  <div class="card">
+    <h3>🕌 İlim Yolcusu</h3>
+    <p>10 görev tamamla.</p>
+    <span>🔒 Henüz kazanılmadı</span>
+  </div>
+
+  <div class="card">
+    <h3>⭐ Usta Öğrenci</h3>
+    <p>20 görev tamamla.</p>
+    <span>🔒 Henüz kazanılmadı</span>
+  </div>
+</section> 
+</body>
+</html>
